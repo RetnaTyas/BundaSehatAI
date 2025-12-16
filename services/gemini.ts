@@ -1,12 +1,41 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { MealAnalysisResult, SupplementAnalysisResult } from '../types';
 
-const apiKey = process.env.API_KEY || '';
-const ai = new GoogleGenAI({ apiKey });
+// Helper to get client safely only when needed
+const getGenAIClient = () => {
+  let apiKey = '';
+  // Check process.env (bundler injected) first, then window.process (runtime shim)
+  if (typeof process !== 'undefined' && process.env && process.env.API_KEY) {
+    apiKey = process.env.API_KEY;
+  } else if (typeof window !== 'undefined' && (window as any).process?.env?.API_KEY) {
+    apiKey = (window as any).process.env.API_KEY;
+  }
+
+  // Return null if no key, handle gracefully in caller
+  if (!apiKey) return null;
+
+  try {
+    return new GoogleGenAI({ apiKey });
+  } catch (e) {
+    console.error("Failed to initialize Gemini client:", e);
+    return null;
+  }
+};
 
 const MODEL_NAME = 'gemini-2.5-flash';
 
 export const analyzeMealWithAI = async (mealDescription: string): Promise<MealAnalysisResult> => {
+  const ai = getGenAIClient();
+  if (!ai) {
+    console.error("API Key missing");
+    return {
+      calories: 0,
+      protein: 0,
+      isPregnancySafe: true,
+      nutritionalNotes: "API Key belum dikonfigurasi. Mohon cek pengaturan deployment."
+    };
+  }
+
   try {
     const response = await ai.models.generateContent({
       model: MODEL_NAME,
@@ -34,17 +63,21 @@ export const analyzeMealWithAI = async (mealDescription: string): Promise<MealAn
     throw new Error("No response text from AI");
   } catch (error) {
     console.error("Error analyzing meal:", error);
-    // Fallback default
     return {
       calories: 0,
       protein: 0,
       isPregnancySafe: true,
-      nutritionalNotes: "Analysis failed. Please try again."
+      nutritionalNotes: "Gagal menganalisis. Silakan coba lagi."
     };
   }
 };
 
 export const analyzeSupplementsWithAI = async (text: string): Promise<SupplementAnalysisResult> => {
+  const ai = getGenAIClient();
+  if (!ai) {
+    return { detected: {}, feedback: "API Key missing." };
+  }
+
   try {
     const response = await ai.models.generateContent({
       model: MODEL_NAME,
@@ -80,7 +113,6 @@ export const analyzeSupplementsWithAI = async (text: string): Promise<Supplement
 
     if (response.text) {
       const json = JSON.parse(response.text);
-      // Flatten the structure if needed or return as is based on interface
       return {
         detected: json.detected || {},
         feedback: json.feedback || "Processed."
@@ -94,6 +126,9 @@ export const analyzeSupplementsWithAI = async (text: string): Promise<Supplement
 };
 
 export const chatWithAdvisor = async (history: { role: string, parts: { text: string }[] }[], newMessage: string): Promise<string> => {
+  const ai = getGenAIClient();
+  if (!ai) return "Mohon konfigurasi API Key terlebih dahulu.";
+
   try {
     const chat = ai.chats.create({
       model: MODEL_NAME,
