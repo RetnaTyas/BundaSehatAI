@@ -7,6 +7,7 @@ import { MealLogger } from './components/MealLogger';
 import { Dashboard } from './components/Dashboard';
 import { ChatAdvisor } from './components/ChatAdvisor';
 import { HistoryView } from './components/HistoryView';
+import { Logo } from './components/Logo';
 
 const getTodayString = () => new Date().toISOString().split('T')[0];
 
@@ -130,7 +131,9 @@ const App: React.FC = () => {
       {/* Header */}
       <header className="bg-white px-6 py-4 pt-[calc(1rem+env(safe-area-inset-top))] flex justify-between items-center sticky top-0 z-10 border-b border-rose-100 shadow-sm shrink-0">
         <div className="flex items-center gap-2">
-           <div className="w-9 h-9 bg-rose-500 rounded-xl flex items-center justify-center text-white font-extrabold text-xl shadow-md shadow-rose-200">B</div>
+           <div className="hover:scale-105 transition-transform duration-300">
+             <Logo className="w-10 h-10" />
+           </div>
            <h1 className="text-xl font-bold text-gray-900 tracking-tight">Bunda<span className="text-rose-500">Sehat</span></h1>
         </div>
         <div className="text-xs bg-rose-50 text-rose-700 border border-rose-100 px-3 py-1.5 rounded-full font-bold">
