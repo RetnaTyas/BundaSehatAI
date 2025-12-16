@@ -1,3 +1,4 @@
+
 export interface Meal {
   id: string;
   name: string;
@@ -57,6 +58,22 @@ export interface MealAnalysisResult {
 export interface SupplementAnalysisResult {
   detected: Partial<DailyLog['supplements']>;
   feedback: string;
+}
+
+export interface MenuRecommendationItem {
+  name: string;
+  description: string;
+  estimatedCalories: number;
+  estimatedProtein: number;
+}
+
+export interface DailyMenuPlan {
+  breakfast: MenuRecommendationItem;
+  lunch: MenuRecommendationItem;
+  dinner: MenuRecommendationItem;
+  snack: MenuRecommendationItem;
+  nutritionalReasoning: string; // Why this menu was chosen based on user stats
+  cookingTip: string; // Safety or cooking tip for pregnancy
 }
 
 export type ViewState = 'dashboard' | 'meals' | 'chat' | 'history';

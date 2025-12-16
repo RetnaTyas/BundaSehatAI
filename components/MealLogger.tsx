@@ -1,14 +1,17 @@
+
 import React, { useState } from 'react';
 import { Camera, Send, Loader2, Utensils, AlertTriangle, CheckCircle } from 'lucide-react';
-import { Meal, MealAnalysisResult } from '../types';
+import { Meal, MealAnalysisResult, UserProfile } from '../types';
 import { analyzeMealWithAI } from '../services/gemini';
+import { DailyMenuRecommendation } from './DailyMenuRecommendation';
 
 interface MealLoggerProps {
   onAddMeal: (meal: Meal) => void;
   recentMeals: Meal[];
+  userProfile: UserProfile;
 }
 
-export const MealLogger: React.FC<MealLoggerProps> = ({ onAddMeal, recentMeals }) => {
+export const MealLogger: React.FC<MealLoggerProps> = ({ onAddMeal, recentMeals, userProfile }) => {
   const [input, setInput] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [preview, setPreview] = useState<MealAnalysisResult | null>(null);
@@ -43,6 +46,9 @@ export const MealLogger: React.FC<MealLoggerProps> = ({ onAddMeal, recentMeals }
 
   return (
     <div className="space-y-6 pb-20">
+      {/* AI Recommendation Section */}
+      <DailyMenuRecommendation userProfile={userProfile} />
+
       {/* Input Section */}
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-rose-200">
         <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">

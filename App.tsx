@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { LayoutDashboard, Utensils, MessageCircle, UserCircle } from 'lucide-react';
 import { DailyLog, ViewState, Meal, UserProfile } from './types';
@@ -163,7 +164,11 @@ const App: React.FC = () => {
 
         {view === 'meals' && (
           <div className="animate-fade-in">
-             <MealLogger onAddMeal={addMeal} recentMeals={log.meals} />
+             <MealLogger 
+               onAddMeal={addMeal} 
+               recentMeals={log.meals} 
+               userProfile={userProfile}
+             />
           </div>
         )}
 

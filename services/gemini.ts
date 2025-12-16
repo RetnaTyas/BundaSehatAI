@@ -1,5 +1,6 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
-import { MealAnalysisResult, SupplementAnalysisResult } from '../types';
+import { MealAnalysisResult, SupplementAnalysisResult, DailyMenuPlan } from '../types';
 
 // Helper to get client safely only when needed
 const getGenAIClient = () => {
@@ -122,6 +123,93 @@ export const analyzeSupplementsWithAI = async (text: string): Promise<Supplement
   } catch (error) {
     console.error("Error analyzing supplements:", error);
     return { detected: {}, feedback: "" };
+  }
+};
+
+export const generateDailyMenu = async (
+  pregnancyWeek: number, 
+  avgCalories: number, 
+  avgProtein: number
+): Promise<DailyMenuPlan | null> => {
+  const ai = getGenAIClient();
+  if (!ai) return null;
+
+  try {
+    const prompt = `
+      Act as a professional nutritionist for pregnant women in Indonesia.
+      User Context:
+      - Pregnancy Week: ${pregnancyWeek}
+      - Recent Average Intake: ${avgCalories} kcal/day, ${avgProtein}g protein/day.
+      - Target: ~2200 kcal/day, ~75g protein/day.
+
+      Task: Generate a 1-day meal plan (Breakfast, Lunch, Dinner, Snack) using INDONESIAN CUISINE that helps balance her nutrition.
+      If her protein is low, suggest high protein meals. If calories are low, suggest nutrient-dense foods.
+      
+      Also provide:
+      1. 'nutritionalReasoning': A short explanation (in Indonesian) why this menu fits her current stats/deficiencies.
+      2. 'cookingTip': A specific food safety or cooking tip relevant to pregnancy (in Indonesian).
+
+      Output must be strictly JSON.
+    `;
+
+    const response = await ai.models.generateContent({
+      model: MODEL_NAME,
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            breakfast: { 
+              type: Type.OBJECT, 
+              properties: {
+                name: { type: Type.STRING },
+                description: { type: Type.STRING },
+                estimatedCalories: { type: Type.NUMBER },
+                estimatedProtein: { type: Type.NUMBER }
+              }
+            },
+            lunch: { 
+              type: Type.OBJECT, 
+              properties: {
+                name: { type: Type.STRING },
+                description: { type: Type.STRING },
+                estimatedCalories: { type: Type.NUMBER },
+                estimatedProtein: { type: Type.NUMBER }
+              }
+            },
+            dinner: { 
+              type: Type.OBJECT, 
+              properties: {
+                name: { type: Type.STRING },
+                description: { type: Type.STRING },
+                estimatedCalories: { type: Type.NUMBER },
+                estimatedProtein: { type: Type.NUMBER }
+              }
+            },
+            snack: { 
+              type: Type.OBJECT, 
+              properties: {
+                name: { type: Type.STRING },
+                description: { type: Type.STRING },
+                estimatedCalories: { type: Type.NUMBER },
+                estimatedProtein: { type: Type.NUMBER }
+              }
+            },
+            nutritionalReasoning: { type: Type.STRING },
+            cookingTip: { type: Type.STRING }
+          }
+        }
+      }
+    });
+
+    if (response.text) {
+      return JSON.parse(response.text) as DailyMenuPlan;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error generating menu:", error);
+    return null;
   }
 };
 
