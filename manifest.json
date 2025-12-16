@@ -1,0 +1,21 @@
+{
+  "name": "BundaSehat AI",
+  "short_name": "BundaSehat",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff1f2",
+  "theme_color": "#fb7185",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192/fb7185/ffffff?text=Bunda",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://via.placeholder.com/512/fb7185/ffffff?text=BundaSehat",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

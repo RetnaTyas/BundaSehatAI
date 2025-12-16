@@ -125,10 +125,10 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-rose-50 max-w-md mx-auto relative shadow-2xl overflow-hidden text-gray-800">
+    <div className="min-h-dvh bg-rose-50 w-full md:max-w-xl mx-auto relative shadow-2xl overflow-hidden text-gray-800 flex flex-col">
       
       {/* Header */}
-      <header className="bg-white px-6 py-4 flex justify-between items-center sticky top-0 z-10 border-b border-rose-100 shadow-sm">
+      <header className="bg-white px-6 py-4 pt-[calc(1rem+env(safe-area-inset-top))] flex justify-between items-center sticky top-0 z-10 border-b border-rose-100 shadow-sm shrink-0">
         <div className="flex items-center gap-2">
            <div className="w-9 h-9 bg-rose-500 rounded-xl flex items-center justify-center text-white font-extrabold text-xl shadow-md shadow-rose-200">B</div>
            <h1 className="text-xl font-bold text-gray-900 tracking-tight">Bunda<span className="text-rose-500">Sehat</span></h1>
@@ -139,7 +139,7 @@ const App: React.FC = () => {
       </header>
 
       {/* Main Content Area */}
-      <main className="p-4 overflow-y-auto pb-28 min-h-[calc(100vh-64px)] scroll-smooth">
+      <main className="flex-1 p-4 overflow-y-auto scroll-smooth pb-32">
         {view === 'dashboard' && (
           <div className="animate-fade-in space-y-5">
             <Dashboard 
@@ -147,7 +147,7 @@ const App: React.FC = () => {
               userProfile={userProfile} 
               onChangeProfile={() => setView('history')}
             />
-            <div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <WaterTracker intake={log.waterIntake} onUpdate={updateWater} />
               <SupplementTracker 
                 data={log.supplements} 
@@ -180,7 +180,7 @@ const App: React.FC = () => {
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-6 py-3 flex justify-between items-center max-w-md mx-auto z-20 shadow-[0_-5px_20px_rgba(0,0,0,0.03)]">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-6 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] flex justify-between items-center w-full md:max-w-xl mx-auto z-20 shadow-[0_-5px_20px_rgba(0,0,0,0.03)] shrink-0">
         <button 
           onClick={() => setView('dashboard')}
           className={`flex flex-col items-center gap-1 transition-all ${view === 'dashboard' ? 'text-rose-600 scale-105' : 'text-gray-400 hover:text-rose-400'}`}
@@ -223,9 +223,6 @@ const App: React.FC = () => {
         }
         .animate-fade-in {
           animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        body {
-          background-color: #f3f4f6; /* Outer background */
         }
       `}</style>
     </div>

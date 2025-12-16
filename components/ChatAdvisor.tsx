@@ -57,9 +57,10 @@ export const ChatAdvisor: React.FC = () => {
     setIsLoading(false);
   };
 
+  // Adjusted height calculation for dynamic viewports
   return (
-    <div className="flex flex-col h-[calc(100vh-140px)] bg-white rounded-2xl shadow-sm border border-rose-100 overflow-hidden">
-      <div className="bg-rose-50 p-4 border-b border-rose-100 flex items-center gap-3">
+    <div className="flex flex-col h-[calc(100dvh-150px)] md:h-[calc(100dvh-160px)] bg-white rounded-2xl shadow-sm border border-rose-100 overflow-hidden">
+      <div className="bg-rose-50 p-4 border-b border-rose-100 flex items-center gap-3 shrink-0">
         <div className="p-2 bg-white rounded-full shadow-sm">
           <Sparkles size={20} className="text-rose-400" />
         </div>
@@ -93,7 +94,7 @@ export const ChatAdvisor: React.FC = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="p-3 bg-gray-50 border-t border-gray-100">
+      <div className="p-3 bg-gray-50 border-t border-gray-100 shrink-0">
         <div className="flex gap-2 items-center bg-white rounded-full px-4 py-2 border border-gray-200 shadow-sm focus-within:border-rose-300 focus-within:ring-1 focus-within:ring-rose-100">
           <input
             type="text"

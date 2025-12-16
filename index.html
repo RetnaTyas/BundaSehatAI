@@ -2,7 +2,14 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#fb7185" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="BundaSehat" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="https://via.placeholder.com/192/fb7185/ffffff?text=Bunda" />
+    
     <title>BundaSehat AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -25,7 +32,8 @@
       @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
       body {
         font-family: 'Quicksand', sans-serif;
-        background-color: #fff1f2;
+        background-color: #f3f4f6; /* Outer bg matches App wrapper */
+        overscroll-behavior-y: none; /* Prevent pull-to-refresh on mobile */
       }
       /* Hide scrollbar for clean UI in chat */
       .no-scrollbar::-webkit-scrollbar {
