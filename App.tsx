@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LayoutDashboard, Utensils, MessageCircle, Settings, UserCircle } from 'lucide-react';
+import { LayoutDashboard, Utensils, MessageCircle, UserCircle } from 'lucide-react';
 import { DailyLog, ViewState, Meal, UserProfile } from './types';
 import { WaterTracker } from './components/WaterTracker';
 import { SupplementTracker } from './components/SupplementTracker';
@@ -24,7 +24,20 @@ const INITIAL_LOG: DailyLog = {
 
 const INITIAL_PROFILE: UserProfile = {
   name: '',
-  pregnancyStartDate: ''
+  pregnancyStartDate: '',
+  notifications: {
+    enabled: false,
+    waterReminder: false,
+    waterInterval: 120,
+    mealReminder: false,
+    mealTimes: {
+      breakfast: "07:00",
+      lunch: "12:30",
+      dinner: "19:00"
+    },
+    supplementReminder: false,
+    supplementTime: "08:00"
+  }
 };
 
 const App: React.FC = () => {
@@ -48,12 +61,27 @@ const App: React.FC = () => {
     const savedProfile = localStorage.getItem('user_profile');
     if (savedProfile) {
       try {
-        setUserProfile(JSON.parse(savedProfile));
+        const parsed = JSON.parse(savedProfile);
+        // Merge with initial to ensure new fields exist
+        setUserProfile({
+           ...INITIAL_PROFILE,
+           ...parsed,
+           notifications: { ...INITIAL_PROFILE.notifications, ...parsed.notifications }
+        });
       } catch (e) {
         console.error("Failed to parse profile", e);
       }
     }
   }, []);
+
+  // Request Notification Permission if enabled
+  useEffect(() => {
+    if (userProfile.notifications.enabled && 'Notification' in window) {
+      if (Notification.permission !== 'granted') {
+        Notification.requestPermission();
+      }
+    }
+  }, [userProfile.notifications.enabled]);
 
   // Save log whenever it changes
   useEffect(() => {

@@ -20,9 +20,24 @@ export interface DailyLog {
   meals: Meal[];
 }
 
+export interface NotificationConfig {
+  enabled: boolean;
+  waterReminder: boolean;
+  waterInterval: number; // in minutes (e.g., every 60 mins)
+  mealReminder: boolean;
+  mealTimes: {
+    breakfast: string; // "07:00"
+    lunch: string; // "12:00"
+    dinner: string; // "19:00"
+  };
+  supplementReminder: boolean;
+  supplementTime: string; // "08:00"
+}
+
 export interface UserProfile {
   name: string;
   pregnancyStartDate: string; // YYYY-MM-DD (HPHT - Hari Pertama Haid Terakhir)
+  notifications: NotificationConfig;
 }
 
 export interface ChatMessage {
